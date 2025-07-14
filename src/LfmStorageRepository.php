@@ -2,6 +2,7 @@
 
 namespace UniSharp\LaravelFilemanager;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 
 class LfmStorageRepository
@@ -31,6 +32,14 @@ class LfmStorageRepository
     public function move($new_lfm_path)
     {
         return $this->disk->move($this->path, $new_lfm_path->path('storage'));
+    }
+
+    public function duplicate($new_lfm_path)
+    {
+        if (File::isDirectory($this->disk->path($this->path))) {
+            return File::copyDirectory($this->disk->path($this->path), $this->disk->path($new_lfm_path->path('storage')));
+        }
+        return $this->disk->copy($this->path, $new_lfm_path->path('storage'));
     }
 
     public function save($file)

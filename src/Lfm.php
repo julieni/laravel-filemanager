@@ -323,6 +323,16 @@ class Lfm
                 'as' => 'doMove'
             ]);
 
+            Route::get('/duplicate', [
+                'uses' => 'ItemsController@duplicate',
+                'as' => 'duplicate',
+            ]);
+
+            Route::get('/doduplicate', [
+                'uses' => 'ItemsController@doduplicate',
+                'as' => 'doduplicate'
+            ]);
+
             // folders
             Route::get('/newfolder', [
                 'uses' => 'FolderController@getAddfolder',

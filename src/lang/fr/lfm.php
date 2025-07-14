@@ -17,6 +17,7 @@ return [
     'menu-resize'       => 'Redimensionner',
     'menu-crop'         => 'Rogner',
     'menu-move'         => 'Déplacer',
+    'menu-duplicate'    => 'Dupliquer',
     'menu-multiple'     => 'Multi-selection',
 
     'title-page'        => 'Gestionnaire de fichiers',

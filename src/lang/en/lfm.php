@@ -17,6 +17,7 @@ return [
     'menu-resize'       => 'Resize',
     'menu-crop'         => 'Crop',
     'menu-move'         => 'Move',
+    'menu-duplicate'    => 'Duplicate',
     'menu-multiple'     => 'Multi-selection',
 
     'title-page'        => 'File Manager',

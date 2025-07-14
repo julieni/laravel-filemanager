@@ -239,6 +239,12 @@
         multiple: true
       },
       {
+        name: 'duplicate',
+        icon: 'paste',
+        label: lang['menu-duplicate'],
+        multiple: true
+      },
+      {
         name: 'resize',
         icon: 'arrows-alt',
         label: lang['menu-resize'],

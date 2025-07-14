@@ -211,6 +211,7 @@ function toggleActions() {
   $('[data-action=rename]').toggleClass('d-none', !one_selected);
   $('[data-action=preview]').toggleClass('d-none', !(many_selected && only_file));
   $('[data-action=move]').toggleClass('d-none', !many_selected);
+  $('[data-action=duplicate]').toggleClass('d-none', !many_selected);
   $('[data-action=download]').toggleClass('d-none', !(many_selected && only_file));
   $('[data-action=resize]').toggleClass('d-none', !(one_selected && only_image));
   $('[data-action=crop]').toggleClass('d-none', !(one_selected && only_image));
@@ -644,6 +645,11 @@ function preview(items) {
 
 function move(items) {
   performLfmRequest('move', { items: items.map(function (item) { return item.name; }) })
+    .done(refreshFoldersAndItems);
+}
+
+function duplicate(items) {
+  performLfmRequest('duplicate', { items: items.map(function (item) { return item.name; }) })
     .done(refreshFoldersAndItems);
 }
 
