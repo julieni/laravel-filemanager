@@ -304,6 +304,38 @@
       acceptedFiles: "{{ implode(',', $helper->availableMimeTypes()) }}",
       maxFilesize: ({{ $helper->maxUploadSize() }} / 1000)
     }
+
+    window.addEventListener('load', () => {
+      const observer = new MutationObserver(mutations => {
+        let mut = mutations.find(m => m.attributeName == 'value');
+        if (mut && mut.target.value != mut.oldValue) {
+          sessionStorage.setItem('filemanager_path', mut.target.value.replace(/^\/shares\//, ''));
+        }
+      });
+      observer.observe(document.getElementById('working_dir'), { attributes: true, attributeFilter: ['value'], attributeOldValue: true });
+    })
+
+    function setInitialPath(path) {
+      let from_session = sessionStorage.getItem('filemanager_path') || '';
+      if (path && path != from_session) {
+        document.getElementById('working_dir').value = '/shares/' + path;
+      }
+      else {
+        document.getElementById('working_dir').value = '/shares/' + from_session;
+      }
+    }
+
+    setInitialPath(@json(request('path','')))
+
+    function setPath(path) {
+      if (!path) {
+        return;
+      }
+      let currentPath = document.getElementById('working_dir').value.replace(/^\/shares\//, '');
+      if (path != currentPath) {
+        goTo('/shares/' + path);
+      }
+    }
   </script>
 </body>
 </html>
