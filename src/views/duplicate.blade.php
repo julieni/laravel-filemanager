@@ -1,40 +1,29 @@
-<ul class="nav nav-pills flex-column">
-  @foreach($root_folders as $root_folder)
-    <li class="nav-item">
-      <a class="nav-link" href="#" data-type="0" onclick="duplicateToNewFolder(`{{$root_folder->url}}`)">
-        <i class="fa fa-folder fa-fw"></i> {{ $root_folder->name }}
-        <input type="hidden" id="goToFolder" name="goToFolder" value="{{ $root_folder->url }}">
-        <div id="items">
-          @foreach($items as $i)
-            <input type="hidden" id="{{ $i }}" name="items[]" value="{{ $i }}">
-          @endforeach
-        </div>
-      </a>
-    </li>
-    @foreach($root_folder->children as $directory)
-    <li class="nav-item sub-item">
-      <a class="nav-link" href="#" data-type="0" onclick="duplicateToNewFolder(`{{$directory->url}}`)">
-        <i class="fa fa-folder fa-fw"></i> {{ $directory->name }}
-        <input type="hidden" id="goToFolder" name="goToFolder" value="{{ $directory->url }}">
-        <div id="items">
-          @foreach($items as $i)
-            <input type="hidden" id="{{ $i }}" name="items[]" value="{{ $i }}">
-          @endforeach
-        </div>
-      </a>
-    </li>
+<form onsubmit="duplicateToNewFolder(event)">
+  <select name="destination" class="form-control">
+    @foreach($root_folders as $root_folder)
+      <option value="{{ $root_folder->url }}">{{ $root_folder->name }}</option>
+      @foreach($root_folder->children as $directory)
+        <option value="{{ $directory->url }}">
+          {{ str_repeat("\u{00A0}", $directory->depth*3) }}{{ $directory->name }}
+          @if($directory->parent)
+            ({{ $directory->parent }})
+          @endif
+        </option>
+      @endforeach
     @endforeach
-  @endforeach
-</ul>
+  </select>
+  <button class="btn my-1 btn-primary w-100"
+    type="submit">{{ __('laravel-filemanager::lfm.btn-confirm') }}</button>
+</form>
 
 <script>
-  function duplicateToNewFolder($folder) {
+  function duplicateToNewFolder(e) {
+    e.preventDefault();
+    const data = new FormData(e.target);
     $("#notify").modal('hide');
-    var items =[];
-    $("#items").find("input").each(function() {items.push(this.id)});
     performLfmRequest('doduplicate', {
-      items: items,
-      goToFolder: $folder
+      items: @json($items),
+      goToFolder: data.get('destination'),
     }).done(refreshFoldersAndItems);
   }
 </script>

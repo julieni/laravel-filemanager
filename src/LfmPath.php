@@ -3,6 +3,7 @@
 namespace UniSharp\LaravelFilemanager;
 
 use Illuminate\Container\Container;
+use Illuminate\Support\Str;
 use Intervention\Image\Facades\Image as InterventionImageV2;
 use Intervention\Image\Laravel\Facades\Image as InterventionImageV3;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -106,6 +107,30 @@ class LfmPath
         });
 
         return $this->sortByColumn($folders);
+    }
+
+    public function folderTree()
+    {
+        $tree = collect($this->storage->allDirectories())
+            ->map(function ($directory) {
+                $path = Str::of($directory)->explode('/');
+                $name = $path->last();
+                if ($name === $this->helper->getThumbFolderName()) {
+                    return null;
+                }
+                $url = $path->put(0, '');
+                $parent = $path->slice(2, -1);
+                return (object) [
+                    'name' => $name,
+                    'url' => $url->join('/'),
+                    'depth' => $parent->count() + 1,
+                    'parent' => $parent->join('/'),
+                ];
+            })
+            ->filter()
+            ->sortBy('url');
+
+        return $tree;
     }
 
     public function files()
@@ -293,11 +318,11 @@ class LfmPath
             $file_name_without_extentions = $new_file_name;
             while ($this->setName(($extension) ? $new_file_name_with_extention : $new_file_name)->exists()) {
                 if (config('lfm.alphanumeric_filename') === true) {
-                    $suffix = '_'.$counter;
+                    $suffix = '_' . $counter;
                 } else {
                     $suffix = " ({$counter})";
                 }
-                $new_file_name = $file_name_without_extentions.$suffix;
+                $new_file_name = $file_name_without_extentions . $suffix;
 
                 if ($extension) {
                     $new_file_name_with_extention = $new_file_name . '.' . $extension;

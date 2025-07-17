@@ -50,7 +50,7 @@ class ItemsController extends LfmController
                     return (object) [
                         'name' => trans('laravel-filemanager::lfm.title-' . $type),
                         'url' => $path->path('working_dir'),
-                        'children' => $path->folders(),
+                        'children' => $path->folderTree(),
                         'has_next' => ! ($type == end($folder_types)),
                     ];
                 }, $folder_types),
@@ -110,7 +110,7 @@ class ItemsController extends LfmController
                     return (object) [
                         'name' => trans('laravel-filemanager::lfm.title-' . $type),
                         'url' => $path->path('working_dir'),
-                        'children' => $path->folders(),
+                        'children' => $path->folderTree(),
                         'has_next' => ! ($type == end($folder_types)),
                     ];
                 }, $folder_types),
