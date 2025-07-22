@@ -19,11 +19,15 @@
 <script>
   function moveToNewFolder(e) {
     e.preventDefault();
-    const data = new FormData(e.target);
-    $("#notify").modal('hide');
+    const data = new FormData(e.target);    
     performLfmRequest('domove', {
       items: @json($items),
       goToFolder: data.get('destination'),
-    }).done(refreshFoldersAndItems);
+    }).done(
+      function(data){
+        $("#notify").modal('hide');
+        refreshFoldersAndItems(data);
+      }      
+    );
   }
 </script>
